@@ -13,10 +13,11 @@ class UsersTableViewController: UITableViewController {
     var user: User?
     
     var ApiService = API()
+    let imageQueue = OperationQueue()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         loadData()
     }
@@ -58,8 +59,27 @@ extension UsersTableViewController {
         }        
         let user = result(for: indexPath)
         cell.nameLabel.text = user?.name.first
-        loadImage(for: user!, for: cell, forItemAt: indexPath)
+        if let imageUrl = user?.picture.medium {
+            ImageDownloadManager.shared.downloadImage(imageUrl, indexPath: indexPath) { (image, url, indexPathh, error) in
+                DispatchQueue.main.async {
+                    cell.userImageView.image = image
+                }
+            }
+        }
         return cell
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let imageUrl = result(for: indexPath)?.picture.medium {
+            ImageDownloadManager.shared.downloadImage(imageUrl, indexPath: indexPath) { (image, url, indexPathh, error) in
+                 DispatchQueue.main.async {
+                    if let getCell = tableView.cellForRow(at: indexPath) {
+                        (getCell as? UserCell)!.userImageView.image = image
+                    }
+                }
+            }
+        }
     }
     
     
@@ -67,6 +87,12 @@ extension UsersTableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let user = result(for: indexPath)
         performSegue(withIdentifier: "UserDetails", sender: user)
+    }
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let imageUrl = result(for: indexPath)?.picture.medium {
+            ImageDownloadManager.shared.slowDownImageDownloadTaskfor(imageUrl)
+        }
     }
     
     // MARK: - Private
