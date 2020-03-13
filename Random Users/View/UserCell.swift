@@ -10,6 +10,11 @@ import UIKit
 
 
 class UserCell: UITableViewCell {
+    
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    
+    static var id: String {
+        return String(describing: self)
+    }
 }

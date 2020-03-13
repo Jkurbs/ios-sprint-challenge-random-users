@@ -13,7 +13,7 @@ class UserDetailsViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
-    var user: User?
+    var user: Result?
     var image: UIImage?
     
     override func viewDidLoad() {
@@ -25,8 +25,8 @@ class UserDetailsViewController: UIViewController {
     
 
     func updateViews() {
-//        nameLabel.text = user?.name.first
-//        imageView.image = image
+        nameLabel.text = user?.name.first
+        imageView.image = image
     }
 
 }
