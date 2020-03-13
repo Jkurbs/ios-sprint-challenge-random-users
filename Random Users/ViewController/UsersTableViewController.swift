@@ -74,7 +74,7 @@ extension UsersTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let imageUrl = result(for: indexPath)?.picture.medium {
+        if let imageUrl = result(for: indexPath)?.picture.large {
             ImageDownloadManager.shared.downloadImage(imageUrl, indexPath: indexPath) { (image, url, indexPathh, error) in
                  DispatchQueue.main.async {
                     if let getCell = tableView.cellForRow(at: indexPath) {
@@ -99,7 +99,7 @@ extension UsersTableViewController {
     // MARK: - Private
     
     private func loadImage(for result: Result, for cell: UserCell, forItemAt indexPath: IndexPath) {
-        ApiService.fetchImage( result.picture.medium) { (data, error) in
+        ApiService.fetchImage( result.picture.large) { (data, error) in
             if let error = error {
                 NSLog("Error: \(error)")
                 return
